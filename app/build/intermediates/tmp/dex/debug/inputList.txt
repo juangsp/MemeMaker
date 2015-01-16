@@ -1,0 +1,7 @@
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\classes\debug
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-38715828456d94b884ff34dc537c7a8cbc70564d.jar
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-5d7fc9263f4ce368da6cdd8613dcd20dc0da9ef9.jar
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\classes-76cd13cd3238ad2469b717bf216b17404450c51c.jar
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-b5dcd403c6951bb2d16c36e2eb59847484e7a81f.jar
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\commons-io-2.4-98bca9a70fa5970f7ece3b3798aa065d0269f5e1.jar
+C:\Users\Juan\AndroidStudioProjects\mememaker\app\build\intermediates\pre-dexed\debug\classes-27cdc567e09a150ccc85a10d27a868fe02d8af94.jar
