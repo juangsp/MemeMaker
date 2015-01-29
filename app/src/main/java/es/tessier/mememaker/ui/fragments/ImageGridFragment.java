@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -21,6 +23,7 @@ import es.tessier.mememaker.models.ImageGridItem;
 import es.tessier.mememaker.ui.activities.CreateMemeActivity;
 import es.tessier.mememaker.ui.activities.MemeSettingsActivity;
 import es.tessier.mememaker.R;
+import es.tessier.mememaker.utils.FileUtilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class ImageGridFragment extends Fragment {
         this.setHasOptionsMenu(true);
         return rootView;
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -66,6 +70,16 @@ public class ImageGridFragment extends Fragment {
 
     private ArrayList extractFiles() {
         final ArrayList imageItems = new ArrayList();
+        ArrayList<File> files=FileUtilities.devolver(this.getActivity());
+        Bitmap map = null;
+        ImageGridItem igi=null;
+
+        for(File f:files){
+            map=BitmapFactory.decodeFile(f.getAbsolutePath());
+            igi=new ImageGridItem( map, f.getName(),f.getAbsolutePath());
+            imageItems.add(igi);
+        }
+
         return imageItems;
     }
 

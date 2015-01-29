@@ -8,10 +8,12 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by Evan Anger on 7/28/14.
@@ -20,10 +22,12 @@ public class FileUtilities {
 
     private static final String TAG ="Error";
     private static final int TAM_BUFFER =1024 ;
+    private static final String STORAGE_TYPE=StorageType.PRIVATE_EXTERNAL;
+    private static final String ALBUM_NAME = "mememaker";
 
     public static void saveAssetImage(Context context, String assetName) {
 
-        File fileDirectory= context.getFilesDir();
+        File fileDirectory= getFileDirectory(context);
         File fileToWrite = new File(fileDirectory,assetName);
         AssetManager assetManager = context.getAssets();
         InputStream in = null;
@@ -76,7 +80,7 @@ public class FileUtilities {
 
 
     public static void saveImage(Context context, Bitmap bitmap, String name) {
-        File fileDirectory = context.getFilesDir();
+        File fileDirectory =getFileDirectory(context);
         File fileToWrite = new File(fileDirectory, name);
 
         try {
@@ -89,6 +93,58 @@ public class FileUtilities {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<File> devolver(Context cont){
+         File fileDirectory=getFileDirectory(cont);
+        final ArrayList<File> filteredFiles= new ArrayList();
+
+        fileDirectory.listFiles(new FileFilter() {
+            public boolean accept(File pathname) {
+                if (pathname.getAbsolutePath().contains("jpg")) {
+                    filteredFiles.add(pathname);
+                    return true;
+                }else  if (pathname.getAbsolutePath().contains("png")) {
+                    filteredFiles.add(pathname);
+                    return true;
+                }else{
+                    return false;
+                }
+
+            }
+        });
+        return filteredFiles;
+    }
+
+    private static File getFileDirectory(Context c){
+        if(STORAGE_TYPE.equals(StorageType.INTERNAL)){
+            return c.getFilesDir();
+        }else{
+            if(isExternalStorageAvailable()){
+                if(STORAGE_TYPE.equals(StorageType.PRIVATE_EXTERNAL)) {
+                   return c.getExternalFilesDir(null);
+                }else{
+                    File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),ALBUM_NAME);
+                    if(!file.mkdirs()){
+                        Log.e(TAG,"Directory not created");
+                    }
+                }
+
+            }
+            if(isExternalStorageAvailable()){
+                return c.getFilesDir();
+            }
+
+        }
+        return null;
+    }
+
+    private static boolean isExternalStorageAvailable() {
+        String state=Environment.getExternalStorageState();
+        if(Environment.MEDIA_MOUNTED.equals(state)){
+            return true;
+        }
+        return false;
     }
 
 }
