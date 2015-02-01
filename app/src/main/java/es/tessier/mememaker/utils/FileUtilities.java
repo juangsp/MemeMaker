@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import es.tessier.mememaker.MemeMakerApplicationSettings;
+
 /**
  * Created by Evan Anger on 7/28/14.
  */
@@ -22,12 +24,13 @@ public class FileUtilities {
 
     private static final String TAG ="Error";
     private static final int TAM_BUFFER =1024 ;
-    private static final String STORAGE_TYPE=StorageType.PRIVATE_EXTERNAL;
+   // private static final String STORAGE_TYPE=StorageType.PRIVATE_EXTERNAL;
     private static final String ALBUM_NAME = "mememaker";
 
     public static void saveAssetImage(Context context, String assetName) {
 
         File fileDirectory= getFileDirectory(context);
+
         File fileToWrite = new File(fileDirectory,assetName);
         AssetManager assetManager = context.getAssets();
         InputStream in = null;
@@ -117,17 +120,19 @@ public class FileUtilities {
     }
 
     private static File getFileDirectory(Context c){
-        if(STORAGE_TYPE.equals(StorageType.INTERNAL)){
+        if(MemeMakerApplicationSettings.getStoragePreference().equals(StorageType.INTERNAL)){
             return c.getFilesDir();
         }else{
             if(isExternalStorageAvailable()){
-                if(STORAGE_TYPE.equals(StorageType.PRIVATE_EXTERNAL)) {
+                if(MemeMakerApplicationSettings.getStoragePreference().equals(StorageType.PRIVATE_EXTERNAL))
+                {
                    return c.getExternalFilesDir(null);
                 }else{
                     File file=new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),ALBUM_NAME);
                     if(!file.mkdirs()){
                         Log.e(TAG,"Directory not created");
                     }
+                    return file;
                 }
 
             }
