@@ -57,7 +57,7 @@ public class FileUtilities {
             }catch (FileNotFoundException e){
                 Log.e(TAG, "FileNotFoundException caught ", e);
             }catch(IOException e){
-                Log.e(TAG, "FileNotFoundException caught ", e);
+                Log.e(TAG, " Exception caught ", e);
             }
         }
 

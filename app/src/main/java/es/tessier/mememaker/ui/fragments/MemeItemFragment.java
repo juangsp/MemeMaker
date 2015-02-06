@@ -2,6 +2,7 @@ package es.tessier.mememaker.ui.fragments;
 
 import android.app.AlertDialog;
 import android.app.ListFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,7 +22,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import es.tessier.mememaker.adapters.MemeItemListAdapter;
+import es.tessier.mememaker.database.MemeDatasource;
 import es.tessier.mememaker.models.Meme;
 import es.tessier.mememaker.models.MemeAnnotation;
 import es.tessier.mememaker.ui.activities.CreateMemeActivity;
@@ -143,4 +147,18 @@ public class MemeItemFragment extends ListFragment {
 
         return workingBitmap;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MemeDatasource memeDatasource=new MemeDatasource(getActivity());
+
+        ArrayList<Meme>memes=memeDatasource.read();
+        setListAdapter(new MemeItemListAdapter(getActivity(),memes));
+    }
+
+
+
+
+
 }
