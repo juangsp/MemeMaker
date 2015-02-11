@@ -88,10 +88,10 @@ public class MemeDatasource {
         return cursor.getString(columIndex) ;
     }
 
-    private SQLiteDatabase openWriteable() {
+    public SQLiteDatabase openWriteable() {
         return mMemeSQLiteHelper.getWritableDatabase();
     }
-    private SQLiteDatabase openReadable() {
+    public SQLiteDatabase openReadable() {
         return mMemeSQLiteHelper.getReadableDatabase();
     }
 
@@ -107,7 +107,7 @@ public class MemeDatasource {
         memeValues.put(MemeSQLiteHelper.COLUM_MEMES_ASSET,meme.getAssetLocation());
         memeValues.put(MemeSQLiteHelper.COLUM_MEMES_NAME,meme.getName());
         long memeID;
-       memeID=database.insert(MemeSQLiteHelper.MEMES_TABLES,null,memeValues);
+          memeID=database.insert(MemeSQLiteHelper.MEMES_TABLES,null,memeValues);
 
         ContentValues annotationValues=new ContentValues();
         for(MemeAnnotation ma:meme.getAnnotations()) {
@@ -115,7 +115,7 @@ public class MemeDatasource {
             annotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_X,ma.getLocationX());
             annotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_Y,ma.getLocationY());
             annotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_COLOR,ma.getColor());
-            annotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_MEME_ID,ma.getId());
+            annotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_MEME_ID,memeID);
         }
         long AnotationS;
         AnotationS=database.insert(MemeSQLiteHelper.ANNOTATIONS_TABLES,null,annotationValues);
@@ -128,6 +128,43 @@ public class MemeDatasource {
     public void update(Meme meme){
         SQLiteDatabase database=openWriteable();
         database.beginTransaction();
+        ContentValues updateMemeValues=new ContentValues();
+        updateMemeValues.put(MemeSQLiteHelper.COLUM_MEMES_NAME,meme.getName());
+        long memeID;
+        memeID=database.update(MemeSQLiteHelper.MEMES_TABLES,updateMemeValues,String.format("%s=%d", MemeSQLiteHelper.COLUM_MEMES_ID, meme.getId()),null);
+
+        ContentValues updateannotationValues=new ContentValues();
+        for(MemeAnnotation ma:meme.getAnnotations()) {
+            updateannotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_TITLE,ma.getTitle());
+            updateannotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_MEME_ID,memeID);
+            updateannotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_X,ma.getLocationX());
+            updateannotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_Y,ma.getLocationY());
+            updateannotationValues.put(MemeSQLiteHelper.COLUM_ANNOTATIONS_COLOR,ma.getColor());
+
+            if(ma.hasBeenSaved()){
+                database.update(MemeSQLiteHelper.ANNOTATIONS_TABLES,updateannotationValues, String.format("%s=%d", MemeSQLiteHelper.COLUM_ANNOTATIONS_MEME_ID, ma.getId()), null);
+            }else{
+
+                database.insert(MemeSQLiteHelper.ANNOTATIONS_TABLES,null,updateannotationValues);
+
+            }
+        }
+
+
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        close(database);
+}
+
+    public void delete(int meme_id){
+        SQLiteDatabase database=openWriteable();
+        database.beginTransaction();
+
+        database.delete(MemeSQLiteHelper.ANNOTATIONS_TABLES,String.format("%s=%d", MemeSQLiteHelper.COLUM_ANNOTATIONS_MEME_ID, meme_id),null);
+        database.delete(MemeSQLiteHelper.MEMES_TABLES,String.format("%s=%d", MemeSQLiteHelper.COLUM_MEMES_ID, meme_id),null);
+        database.setTransactionSuccessful();
+        database.endTransaction();
+        close(database);
 
     }
 

@@ -178,7 +178,13 @@ public class CreateMemeActivity extends Activity {
         }
 
         MemeDatasource mdt=new MemeDatasource(this);
-        mdt.create(mCurrentMeme);
+
+        if(mCurrentMeme.getId()!=-1){
+            mdt.update(mCurrentMeme);
+        }else{
+            mdt.create(mCurrentMeme);
+        }
+
 
     }
 }

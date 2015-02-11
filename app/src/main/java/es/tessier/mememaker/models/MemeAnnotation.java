@@ -24,7 +24,9 @@ public class MemeAnnotation implements Serializable {
     }
 
     public int getId() { return mId; }
-    public boolean hasBeenSaved() { return (getId() != -1); }
+    public boolean hasBeenSaved() {
+        return (getId() != -1);
+    }
 
     public String getColor() { return mColor; }
     public void setColor(String color) {
