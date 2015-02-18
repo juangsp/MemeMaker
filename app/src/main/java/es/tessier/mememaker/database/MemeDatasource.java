@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
 import java.util.ArrayList;
+import java.util.Date;
 
 import es.tessier.mememaker.models.Meme;
 import es.tessier.mememaker.models.MemeAnnotation;
@@ -33,7 +33,13 @@ public class MemeDatasource {
         SQLiteDatabase database=openReadable();
         ArrayList<Meme>memes=new ArrayList();
         Cursor cursor;
-        cursor=database.query(MemeSQLiteHelper.MEMES_TABLES,new String[]{MemeSQLiteHelper.COLUM_MEMES_ID,MemeSQLiteHelper.COLUM_MEMES_ASSET,MemeSQLiteHelper.COLUM_MEMES_NAME},null,null,null,null,null);
+        cursor=database.query(MemeSQLiteHelper.MEMES_TABLES,
+                new String[]{MemeSQLiteHelper.COLUM_MEMES_ID,MemeSQLiteHelper.COLUM_MEMES_ASSET,MemeSQLiteHelper.COLUM_MEMES_NAME},
+                null,
+                null,
+                null,
+                null,
+                MemeSQLiteHelper.COLUM_MEMES_DATE+" DESC");
 
         if(cursor.moveToFirst()==true){
             Meme meme;
@@ -74,7 +80,10 @@ public class MemeDatasource {
             }
             m.setAnnotations(annotation);
         }
-        cursor.close();
+        if(cursor!=null){
+            cursor.close();
+        }
+
         close(database);
 
     }
@@ -101,11 +110,14 @@ public class MemeDatasource {
 
     public void create(Meme meme){
         SQLiteDatabase database=openWriteable();
+        Date date = null;
+        date=new Date();
         database.beginTransaction();
         ContentValues memeValues=new ContentValues();
 
         memeValues.put(MemeSQLiteHelper.COLUM_MEMES_ASSET,meme.getAssetLocation());
         memeValues.put(MemeSQLiteHelper.COLUM_MEMES_NAME,meme.getName());
+        memeValues.put(MemeSQLiteHelper.COLUM_MEMES_DATE, date.getTime());
         long memeID;
           memeID=database.insert(MemeSQLiteHelper.MEMES_TABLES,null,memeValues);
 

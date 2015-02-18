@@ -12,18 +12,21 @@ import java.sql.SQLException;
  */
 public class MemeSQLiteHelper extends SQLiteOpenHelper {
     static final String DATABASE_NAME = "memes.db";
-    static final int DATABASE_VERSION = 1;
+    static final int DATABASE_VERSION = 3;
     //Meme Table functionality
 
     static final String MEMES_TABLES="MEMES";
     static final String COLUM_MEMES_ASSET="asset";
     static final String COLUM_MEMES_NAME="name";
     static final String COLUM_MEMES_ID="_id";
+    static final String COLUM_MEMES_DATE="create_date";
+
+    static final String ALTER_ADD_CREATE_DATE="ALTER TABLE "+MEMES_TABLES+" ADD COLUMN "+COLUM_MEMES_DATE+" INTEGER;";
 
     static final String CREATE_TABLE_MEMES="CREATE TABLE "+MEMES_TABLES+" ( "+
             COLUM_MEMES_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
             COLUM_MEMES_ASSET+" TEXT NOT NULL,"+
-            COLUM_MEMES_NAME+" TEXT NOT NULL); ";
+            COLUM_MEMES_NAME+" TEXT NOT NULL);";
 
     //Meme Table Annotations functionality
 
@@ -65,6 +68,11 @@ public class MemeSQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        switch(oldVersion){
+            case 2:db.execSQL(ALTER_ADD_CREATE_DATE);
+
+        }
 
     }
 //Meme Table functionality
